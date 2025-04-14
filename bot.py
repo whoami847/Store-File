@@ -6,14 +6,11 @@ from pyrogram import Client
 from pyrogram.enums import ParseMode
 import sys
 from datetime import datetime
-#rohit_1888 on Tg
 from config import *
 
-
-name ="""
- BY CODEFLIX BOTS
+name = """
+ BY WHOAMI AND MEHEDIYT
 """
-
 
 class Bot(Client):
     def __init__(self):
@@ -45,7 +42,7 @@ class Bot(Client):
                 self.LOGGER(__name__).warning(a)
                 self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
                 self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL1 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL1}")
-                self.LOGGER(__name__).info("\nBot Stopped. https://t.me/weebs_support for support")
+                self.LOGGER(__name__).info("\nBot Stopped. Contact WhoAmI or MehediYT for support")
                 sys.exit()
         if FORCE_SUB_CHANNEL2:
             try:
@@ -58,7 +55,7 @@ class Bot(Client):
                 self.LOGGER(__name__).warning(a)
                 self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
                 self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL2 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL2}")
-                self.LOGGER(__name__).info("\nBot Stopped. https://t.me/weebs_support for support")
+                self.LOGGER(__name__).info("\nBot Stopped. Contact WhoAmI or MehediYT for support")
                 sys.exit()
         if FORCE_SUB_CHANNEL3:
             try:
@@ -71,7 +68,7 @@ class Bot(Client):
                 self.LOGGER(__name__).warning(a)
                 self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
                 self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL3 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL3}")
-                self.LOGGER(__name__).info("\nBot Stopped. https://t.me/weebs_support for support")
+                self.LOGGER(__name__).info("\nBot Stopped. Contact WhoAmI or MehediYT for support")
                 sys.exit()
         if FORCE_SUB_CHANNEL4:
             try:
@@ -84,7 +81,7 @@ class Bot(Client):
                 self.LOGGER(__name__).warning(a)
                 self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
                 self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL4 value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL4}")
-                self.LOGGER(__name__).info("\nBot Stopped. https://t.me/weebs_support for support")
+                self.LOGGER(__name__).info("\nBot Stopped. Contact WhoAmI or MehediYT for support")
                 sys.exit()
         try:
             db_channel = await self.get_chat(CHANNEL_ID)
@@ -94,11 +91,11 @@ class Bot(Client):
         except Exception as e:
             self.LOGGER(__name__).warning(e)
             self.LOGGER(__name__).warning(f"Make Sure bot is Admin in DB Channel, and Double check the CHANNEL_ID Value, Current Value {CHANNEL_ID}")
-            self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/weebs_support for support")
+            self.LOGGER(__name__).info("\nBot Stopped. Contact WhoAmI or MehediYT for support")
             sys.exit()
 
         self.set_parse_mode(ParseMode.HTML)
-        self.LOGGER(__name__).info(f"Bot Running..!\n\nCreated by \nhttps://t.me/weebs_support")
+        self.LOGGER(__name__).info(f"Bot Running..!\n\nCreated by WhoAmI and MehediYT")
         self.LOGGER(__name__).info(f"""       
 
 
@@ -112,15 +109,14 @@ class Bot(Client):
 
         self.set_parse_mode(ParseMode.HTML)
         self.username = usr_bot_me.username
-        self.LOGGER(__name__).info(f"Bot Running..! Made by @Codeflix_Bots")   
+        self.LOGGER(__name__).info(f"Bot Running..! Made by WhoAmI and MehediYT")   
 
         # Start Web Server
         app = web.AppRunner(await web_server())
         await app.setup()
         await web.TCPSite(app, "0.0.0.0", PORT).start()
 
-
-        try: await self.send_message(OWNER_ID, text = f"<b><blockquote>- Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ by @Codeflix_Bots</blockquote></b>")
+        try: await self.send_message(OWNER_ID, text = f"<b><blockquote>- ʙᴏᴛ ʀᴇsᴛᴀʀᴛᴇᴅ ʙʏ ᴡʜᴏᴀᴍɪ ᴀɴᴅ ᴍᴇʜᴇᴅɪʏᴛ</blockquote></b>")
         except: pass
 
     async def stop(self, *args):
@@ -131,7 +127,7 @@ class Bot(Client):
         """Run the bot."""
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.start())
-        self.LOGGER(__name__).info("Bot is now running. Thanks to @rohit_1888")
+        self.LOGGER(__name__).info("Bot is now running. Thanks to WhoAmI and MehediYT")
         try:
             loop.run_forever()
         except KeyboardInterrupt:
@@ -140,10 +136,9 @@ class Bot(Client):
             loop.run_until_complete(self.stop())
 
 #
-# Copyright (C) 2025 by Codeflix-Bots@Github, < https://github.com/Codeflix-Bots >.
+# Copyright (C) 2025 by WhoAmI and MehediYT.
 #
-# This file is part of < https://github.com/Codeflix-Bots/FileStore > project,
+# This file is part of FileStore project,
 # and is released under the MIT License.
-# Please see < https://github.com/Codeflix-Bots/FileStore/blob/master/LICENSE >
 #
 # All rights reserved.
