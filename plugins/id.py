@@ -1,13 +1,8 @@
-#credit @codeflix_bots (telegram)
-
-"""Get id of the replied user
-Syntax: /id"""
-
 from pyrogram import filters, enums
 from pyrogram.types import Message
-
 from bot import Bot
 
+# credit @WhoAmI, @MehediYT
 
 @Bot.on_message(filters.command("id") & filters.private)
 async def showid(client, message):
