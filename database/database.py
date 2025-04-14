@@ -1,9 +1,8 @@
-#Codeflix_Botz
-#rohit_1888 on Tg
-
-import motor, asyncio
+import motor
 import motor.motor_asyncio
 from config import DB_URI, DB_NAME
+
+# WhoAmI, MehediYT
 
 dbclient = motor.motor_asyncio.AsyncIOMotorClient(DB_URI)
 database = dbclient[DB_NAME]
@@ -11,7 +10,7 @@ database = dbclient[DB_NAME]
 user_data = database['users']
 
 default_verify = {
-    'is_verified': False,
+    'is_verified': True,
     'verified_time': 0,
     'verify_token': "",
     'link': ""
@@ -21,7 +20,7 @@ def new_user(id):
     return {
         '_id': id,
         'verify_status': {
-            'is_verified': False,
+            'is_verified': True,
             'verified_time': "",
             'verify_token': "",
             'link': ""
