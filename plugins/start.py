@@ -7,7 +7,6 @@ import random
 import asyncio
 import time
 import pytz
-from database.verify_db import vr_db
 from .pmfilter import auto_filter 
 from Script import script
 from datetime import datetime
@@ -33,7 +32,7 @@ REACTIONS = ["❤️", "👍", "🔥", "🎉", "😍"]
 
 @Client.on_message(filters.command("start") & filters.incoming)
 async def start(client, message):
-    # Add reaction emoji directly without checking EMOJI_MODE
+    # Add reaction emoji directly
     await message.react(emoji=random.choice(REACTIONS), big=True) 
     if message.chat.type in [enums.ChatType.GROUP, enums.ChatType.SUPERGROUP]:
         buttons = [[
@@ -277,7 +276,7 @@ async def start(client, message):
                 await client.send_cached_media(
                     chat_id=message.from_user.id,
                     file_id=msg.get("file_id"),
-                    caption=f_caption,
+                    caption=f\caption,
                     protect_content=msg.get('protect', False),
                     reply_markup=InlineKeyboardMarkup(btn)
                 )
@@ -365,7 +364,7 @@ async def start(client, message):
                 reply_markup=InlineKeyboardMarkup(btn)
             )
             await verify_user(client, userid, token) 
-            await vr_db.save_verification(message.from_user.id) 
+            # Removed vr_db.save_verification call since the module is missing
             now = datetime.now()
             current_time = now.strftime("%H:%M:%S")
             current_date = now.strftime("%Y-%m-d")
@@ -441,12 +440,12 @@ async def start(client, message):
                 )
             )
             await asyncio.sleep(600)
-            await k.edit("<b>ʏᴏᴜʀ ᴍᴇꜱꜱᴀɢᴇ ɪꜱ ᴅᴇʟᴇᴛᴇᴅ !\nᴋɪɴᴅʟʏ ꜱᴇᴀʀᴄʜ ᴀɢᴀɪɴ.</b>")
+            await k.edit("<b>ʏᴏᴜʀ ᴍᴇꜱꜱᴀɢᴇ ɪꜱ ᴅᴇʟᴇᴛᴇᴅ !\nᴋɪɴᴅʟʸ ꜱᴇᴀʀᴄʜ ᴀɢᴀɪɴ.</b>")
             return    
     elif data.startswith("all"):
         files = temp.GETALL.get(file_id)
         if not files:
-            return await message.reply('<b><i>ɴᴏ ꜱᴜᴄʜ ꜀ɪʟᴇ ᴇxɪꜱᴛꜱ !</b></i>')
+            return await message.reply('<b><i>ɴᴏ ꜱᴜᴄʜ ꜰɪʟᴇ ᴇxɪꜱᴛꜱ !</b></i>')
         filesarr = []
         for file in files:
             file_id = file.file_id
@@ -555,7 +554,7 @@ async def start(client, message):
                         InlineKeyboardButton("ʜᴏᴡ ᴛᴏ ᴠᴇʀɪғʏ", url=HOW_TO_VERIFY)
                    ]]
                    l = await message.reply_text(
-                       text=f"<blockquote><b>ʜᴇʏ ʙʀᴏ,\n\n ‼️ ʏᴏᴜ'ʀᴇ ɴᴏᴛ ᴠᴇʀɪғɪᴇᴅ ᴛᴏᴅᴀʏ ‼️\n\n ›› ᴘʟᴇᴀsᴇ ᴠᴇʀɪғʏ ᴀɴᴅ ɢᴇᴛ ᴜɴʟɪᴍɪᴛᴇᴅ ᴀᴄᴄᴇss ғᴏʀ {VERIFY_EXPIRE} ʜᴏᴜʀs ✅\n\n ›› ɪғ ʏᴏᴜ ᴡᴀɴᴛ ᴅɪʀᴇᴄᴛ ꜀ɪʟᴇs ᴛʜᴇɴ ʏᴏᴜ ᴄᴀɴ ᴛ�.aᴋᴇ ᴘʀᴇᴍɪᴜᴍ sᴇʀᴠɪᴄᴇs.</blockquote></b>",
+                       text=f"<blockquote><b>ʜᴇʏ ʙʀᴏ,\n\n ‼️ ʏᴏᴜ'ʀᴇ ɴᴏᴛ ᴠᴇʀɪғɪᴇᴅ ᴛᴏᴅᴀʏ ‼️\n\n ›› ᴘʟᴇᴀsᴇ ᴠᴇʀɪғʏ ᴀɴᴅ ɢᴇᴛ ᴜɴʟɪᴍɪᴛᴇᴅ ᴀᴄᴄᴇss ғᴏʀ {VERIFY_EXPIRE} ʜᴏᴜʀs ✅\n\n ›› ɪғ ʏᴏᴜ ᴡᴀɴᴛ ᴅɪʀᴇᴄᴛ ꜀ɪʟᴇs ᴛʜᴇɴ ʏᴏᴜ ᴄᴀɴ ᴛᴀᴋᴇ ᴘʀᴇᴍɪᴜᴍ sᴇʀᴠɪᴄᴇs.</blockquote></b>",
                        protect_content=False,
                        reply_markup=InlineKeyboardMarkup(btn)
                    )
@@ -565,11 +564,11 @@ async def start(client, message):
             if STREAM_MODE:
                 btn = [
                     [InlineKeyboardButton('🚀 ꜀ᴀꜱᴛ ᴅᴏᴡɴʟᴏᴀᴅ / ᴡᴀᴛᴄʜ ᴏɴʟɪɴᴇ 🖥️', callback_data=f'generate_stream_link:{file_id}')],
-                    [InlineKeyboardButton('📌 ᴊᴏɪɴ ᴜᴘᴅᴀᴛᴇꜱ ᴄʜ�.aɴɴᴇʟ 📌', url=MOVIE_UPDATE_CHANNEL_LNK)]  # Keep this line unchanged
+                    [InlineKeyboardButton('📌 ᴊᴏɪɴ ᴜᴘᴅᴀᴛᴇꜱ ᴄʜᴀɴɴᴇʟ 📌', url=MOVIE_UPDATE_CHANNEL_LNK)]  # Keep this line unchanged
                 ]
             else:
                 btn = [
-                    [InlineKeyboardButton('📌 ᴊᴏɪɴ ᴜᴘᴅᴀᴛᴇꜱ ᴄʜ�.aɴɴᴇʟ 📌', url=MOVIE_UPDATE_CHANNEL_LNK)]
+                    [InlineKeyboardButton('📌 ᴊᴏɪɴ ᴜᴘᴅ�.aᴛᴇꜱ ᴄʜᴀɴɴᴇʟ 📌', url=MOVIE_UPDATE_CHANNEL_LNK)]
                 ]
             msg = await client.send_cached_media(
                 chat_id=message.from_user.id,
@@ -595,7 +594,7 @@ async def start(client, message):
                 f"<b><u>❗️❗️❗️IMPORTANT❗️️❗️❗️</u></b>\n\n"
                 f"ᴛʜɪꜱ ᴍᴏᴠɪᴇ ꜀ɪʟᴇ/ᴠɪᴅᴇᴏ ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇᴅ ɪɴ <b><u><code>{get_time(DELETE_TIME)}</code></u> 🫥 <i></b>"
                 "(ᴅᴜᴇ ᴛᴏ ᴄᴏᴘʏʀɪɢʜᴛ ɪꜱꜱᴜᴇꜱ)</i>.\n\n"
-                "<b><i>ᴘʟᴇᴀꜱᴇ ꜀ᴏʀᴡᴀʀᴅ ᴛʜɪꜱ ꜀ɪʟᴇ ᴛᴏ ꜱᴏᴍᴇᴡʜᴇʀᴇ ᴇʟꜱᴇ ᴀɴᴅ ꜱᴛ�.aʀᴛ ᴅᴏᴡɴʟᴏ�.aᴅɪɴɢ ᴛʜᴇʀᴇ</i></b>",
+                "<b><i>ᴘʟᴇ�.aꜱᴇ ꜀ᴏʀᴡᴀʀᴅ ᴛʜɪꜱ ꜀ɪʟᴇ ᴛᴏ ꜱᴏᴍᴇᴡʜᴇʀᴇ ᴇʟꜱᴇ ᴀɴᴅ ꜱᴛ�.aʀᴛ ᴅᴏᴡɴʟᴏ�.aᴅɪɴɢ ᴛʜᴇʀᴇ</i></b>",
                 quote=True
             )
             await asyncio.sleep(DELETE_TIME)
@@ -604,67 +603,4 @@ async def start(client, message):
             return
         except:
             pass
-        return await message.reply('ɴᴏ ꜱᴜᴄʜ ꜀ɪʟᴇ ᴇxɪꜱᴛꜱ !')
-    
-    files = files_[0]
-    title = ' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), files.file_name.split()))
-    size = get_size(files.file_size)
-    f_caption = files.caption
-
-    if CUSTOM_FILE_CAPTION:
-        try:
-            f_caption=CUSTOM_FILE_CAPTION.format(file_name= '' if title is None else title, file_size='' if size is None else size, file_caption='' if f_caption is None else f_caption)
-        except Exception as e:
-            logger.exception(e)
-            f_caption = f_caption
-
-    if f_caption is None:
-        f_caption = ' '.join(filter(lambda x: not x.startswith('[') and not x.startswith('@') and not x.startswith('www.'), files.file_name.split()))
-
-    if await db.has_premium_access(message.from_user.id):
-        pass
-    else:
-        if not await check_verification(client, message.from_user.id) and VERIFY == True:
-            btn = [[
-              InlineKeyboardButton("ᴄʟɪᴄᴋ ʜᴇʀᴇ ᴛᴏ ᴠᴇʀɪғʏ", url=await get_token(client, message.from_user.id, f"https://telegram.me/{temp.U_NAME}?start=", file_id))
-           ],[
-              InlineKeyboardButton("ʜᴏᴡ ᴛᴏ ᴠᴇʀɪғʏ", url=HOW_TO_VERIFY)
-           ]]
-            l = await message.reply_text(
-                text=f"<blockquote><b>ʜᴇʏ ʙʀᴏ,\n\n ‼️ ʏᴏᴜ'ʀᴇ ɴᴏᴛ ᴠᴇʀɪғɪᴇᴅ ᴛᴏᴅ�.aʏ ‼️\n\n ›› ᴘʟᴇ�.aꜱᴇ ᴠᴇʀɪғʏ ᴀɴᴅ ɢᴇᴛ ᴜɴʟɪᴍɪᴛᴇᴅ ᴀᴄᴄᴇꜱꜱ ғᴏʀ {VERIFY_EXPIRE} ʜᴏᴜʀꜱ ✅\n\n ›› ɪғ ʏᴏᴜ ᴡ�.aɴᴛ ᴅɪʀᴇᴄᴛ ꜀ɪʟᴇꜱ ᴛʜᴇɴ ʏᴏᴜ ᴄ�.aɴ ᴛ�.aᴋᴇ ᴘʀᴇᴍɪᴜᴍ ꜱᴇʀᴠɪᴄᴇꜱ.</blockquote></b>",
-                protect_content=False,
-                reply_markup=InlineKeyboardMarkup(btn)
-            )
-            await asyncio.sleep(180)
-            await l.delete()
-            return
-    if STREAM_MODE:
-        btn = [
-            [InlineKeyboardButton('🚀 ꜀ᴀꜱᴛ ᴅᴏᴡɴʟᴏ�.aᴅ / ᴡ�.aᴛᴄʜ ᴏɴʟɪɴᴇ 🖥️', callback_data=f'generate_stream_link:{file_id}')],
-            [InlineKeyboardButton('📌 ᴊᴏɪɴ ᴜᴘᴅ�.aᴛᴇꜱ ᴄʜ�.aɴɴᴇʟ 📌', url=MOVIE_UPDATE_CHANNEL_LNK)]  # Keep this line unchanged
-        ]
-    else:
-        btn = [
-            [InlineKeyboardButton('📌 ᴊᴏɪɴ ᴜᴘᴅ�.aᴛᴇꜱ ᴄʜ�.aɴɴᴇʟ 📌', url=MOVIE_UPDATE_CHANNEL_LNK)]
-        ]
-    msg = await client.send_cached_media(
-        chat_id=message.from_user.id,
-        file_id=file_id,
-        caption=f_caption,
-        protect_content=True if pre == 'filep' else False,
-        reply_markup=InlineKeyboardMarkup(btn)
-    )
-    btn = [[
-            InlineKeyboardButton("❗ ɢᴇᴛ ꜀ɪʟᴇ ᴀɢ�.aɪɴ ❗", callback_data=f'delfile#{file_id}')
-        ]]
-    k = await msg.reply(
-        f"<b><u>❗️❗️❗️IMPORTANT❗️️❗️❗️</u></b>\n\n"
-        f"ᴛʜɪꜱ ᴍᴏᴠɪᴇ ꜀ɪʟᴇ/ᴠɪᴅᴇᴏ ᴡɪʟʟ ʙᴇ ᴅᴇʟᴇᴛᴇᴅ ɪɴ <b><u><code>{get_time(DELETE_TIME)}</code></u> 🫥 <i></b>"
-        "(ᴅᴜᴇ ᴛᴏ ᴄᴏᴘʏʀɪɢʜᴛ ɪꜱꜱᴜᴇꜱ)</i>.\n\n"
-        "<b><i>ᴘʟᴇ�.aꜱᴇ ꜀ᴏʀᴡ�.aʀᴅ ᴛʜɪꜱ ꜀ɪʟᴇ ᴛᴏ ꜱᴏᴍᴇᴡʜᴇʀᴇ ᴇʟꜱᴇ �.aɴᴅ ꜱᴛ�.aʀᴛ ᴅᴏᴡɴʟᴏ�.aᴅɪɴɢ ᴛʜᴇʀᴇ</i></b>",
-        quote=True
-    )     
-    await asyncio.sleep(DELETE_TIME)
-    await msg.delete()
-    await k.edit_text("<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜀ɪʟᴇ ɪꜱ ꜱᴜᴄᴄᴇꜱꜱ꜀ᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!</b>")
-    return
+        return await message.reply('ɴᴏ ꜱᴜᴄʜ ꜀
