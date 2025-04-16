@@ -1,4 +1,12 @@
-# 
+# Don't Remove Credit @sewxiy, @YourCustomHandle
+# Ask Doubt on telegram @YourSupportHandle
+#
+# Copyright (C) 2025 by YourBotTeam@Github, < https://github.com/YourBotTeam >.
+#
+# This file is part of < https://github.com/YourBotTeam/FileStore > project,
+# and is released under the MIT License.
+# Please see < https://github.com/YourBotTeam/FileStore/blob/master/LICENSE >
+#
 # All rights reserved.
 #
 
@@ -20,7 +28,7 @@ from helper_func import *
 from database.database import *
 from logging import getLogger
 
-# File auto-delete time in seconds (Set your desired time in seconds here)
+# File auto-delete time in seconds
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
 # TUT_VID set to empty string as a fallback; define it in config.py if needed
 TUT_VID = ""  # Replace with actual tutorial video URL in config.py if available
@@ -43,18 +51,25 @@ STICKERS = [
     "CAACAgUAAxkBAe84hmf_MsanKfX68CP5pXz3J-AQcASVAAJpEgACqXaJVxBrhzahNnwSNgQ"  # Provided sticker
 ]
 
-@Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
+@Bot.on_message(filters.command('start') & filters.private)
 async def start_command(client: Client, message: Message):
     id = message.from_user.id
     if not await present_user(id):
         try:
             await add_user(id)
+            LOGGER.info(f"Added new user: {id}")
         except Exception as e:
             LOGGER.error(f"Failed to add user {id}: {e}")
+
+    # Check subscription status
+    subscribed = await check_subscription(client, message)
+    if not subscribed:
+        return
 
     # Add random animated emoji reaction
     try:
         random_emoji = random.choice(ANIMATED_EMOJIS)
+        await asyncio.sleep(0.5)  # Small delay to avoid rate limits
         await client.set_reaction(
             chat_id=message.chat.id,
             message_id=message.id,
@@ -76,7 +91,7 @@ async def start_command(client: Client, message: Message):
     if id in ADMINS:
         verify_status = {
             'is_verified': True,
-            'verify_token': None,  # Admins don't need a token
+            'verify_token': None,
             'verified_time': time.time(),
             'link': ""
         }
@@ -107,11 +122,11 @@ async def start_command(client: Client, message: Message):
                 await update_verify_status(id, verify_token=token, link="")
                 link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, f'https://telegram.dog/{client.username}?start=verify_{token}')
                 btn = [
-                    [InlineKeyboardButton("• ᴏᴘᴇɴ ʟɪɴᴋ •", url=link)], 
+                    [InlineKeyboardButton("• ᴏᴘᴇɴ ʟɪɴᴋ •", url=link)],
                     [InlineKeyboardButton('• ᴛᴜᴛᴏʀɪᴀʟ •', url=TUT_VID)] if TUT_VID else []
                 ]
                 return await message.reply(
-                    f"𝗬𝗼𝘂𝗿 𝘁𝗼𝗸𝗲𝗻 𝗵𝗮𝘀 𝗲𝘅𝗽𝗶𝗿𝗲𝗱. 𝗣𝗹𝗲𝗮𝘀𝗲 𝗿𝗲𝗳𝗿𝗲𝘀𝗵 𝘆𝗼𝘂𝗿 𝘁𝗼𝗸𝗲𝗻 𝘁𝗼 𝗰𝗼𝗻𝘁𝗶𝗻𝘂�_e..\n\n<b>Tᴏᴋᴇɴ Tɪᴍᴇᴏᴜᴛ:</b> {get_exp_time(VERIFY_EXPIRE)}\n\n<b>ᴡʜᴀᴛ ɪs ᴛʜᴇ ᴛᴏᴋᴇɴ??</b>\n\nᴛʜɪs ɪs ᴀɴ ᴀᴅs ᴛᴏᴋᴇɴ. ᴘᴀssɪɴɢ ᴏɴᴇ ᴀᴅ ᴀʟʟᴏᴡs ʏᴏᴜ ᴛᴏ ᴜsᴇ ᴛʜᴇ ʙᴏᴛ ғᴏʀ {get_exp_time(VERIFY_EXPIRE)}</b>",
+                    f"𝗬𝗼𝘂𝗿 𝘁𝗼𝗸𝗲𝗻 𝗵𝗮𝘀 𝗲𝘅𝗽𝗶𝗿𝗲𝗱. 𝗣𝗹𝗲𝗮𝘀𝗲 𝗿𝗲𝗳𝗿𝗲𝘀𝗵 𝘆𝗼𝘂𝗿 𝘁𝗼𝗸𝗲𝗻 𝘁𝗼 𝗰𝗼𝗻𝘁𝗶𝗻𝘂𝗲..\n\n<b>Tᴏᴋᴇɴ Tɪᴍᴇᴏᴜᴛ:</b> {get_exp_time(VERIFY_EXPIRE)}\n\n<b>ᴡʜᴀᴛ ɪs ᴛʜᴇ ᴛᴏᴋᴇɴ??</b>\n\nᴛʜɪs ɪs ᴀɴ ᴀᴅs ᴛᴏᴋᴇɴ. ᴘᴀssɪɴɢ ᴏɴᴇ ᴀᴅ ᴀʟʟᴏᴡs ʏᴏᴜ ᴛᴏ ᴜsᴇ ᴛʜᴇ ʙᴏᴛ ғᴏʀ {get_exp_time(VERIFY_EXPIRE)}</b>",
                     reply_markup=InlineKeyboardMarkup(btn),
                     protect_content=False,
                     quote=True
@@ -229,56 +244,52 @@ async def start_command(client: Client, message: Message):
         )
         return
 
-@Bot.on_message(filters.command('start') & filters.private)
-async def not_joined(client: Client, message: Message):
+async def check_subscription(client: Client, message: Message):
     buttons = []
-    if FORCE_SUB_CHANNEL1 and FORCE_SUB_CHANNEL2:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink1),
-            InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2),
-        ])
-    elif FORCE_SUB_CHANNEL1:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink1)
-        ])
-    elif FORCE_SUB_CHANNEL2:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink2)
-        ])
-    if FORCE_SUB_CHANNEL3 and FORCE_SUB_CHANNEL4:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink3),
-            InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4),
-        ])
-    elif FORCE_SUB_CHANNEL3:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink3)
-        ])
-    elif FORCE_SUB_CHANNEL4:
-        buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink4)
-        ])
+    subscribed = True
     try:
-        buttons.append([
-            InlineKeyboardButton(
-                text="ʀᴇʟᴏᴀᴅ",
-                url=f"https://t.me/{client.username}?start={message.command[1]}"
-            )
-        ])
-    except IndexError:
-        pass
+        if FORCE_SUB_CHANNEL1 and not await client.get_chat_member(FORCE_SUB_CHANNEL1, message.from_user.id):
+            buttons.append([InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink1)])
+            subscribed = False
+        if FORCE_SUB_CHANNEL2 and not await client.get_chat_member(FORCE_SUB_CHANNEL2, message.from_user.id):
+            buttons.append([InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink2)])
+            subscribed = False
+        if FORCE_SUB_CHANNEL3 and not await client.get_chat_member(FORCE_SUB_CHANNEL3, message.from_user.id):
+            buttons.append([InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink3)])
+            subscribed = False
+        if FORCE_SUB_CHANNEL4 and not await client.get_chat_member(FORCE_SUB_CHANNEL4, message.from_user.id):
+            buttons.append([InlineKeyboardButton("• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4)])
+            subscribed = False
+    except UserNotParticipant:
+        subscribed = False
+    except Exception as e:
+        LOGGER.error(f"Error checking subscription for user {message.from_user.id}: {e}")
+        subscribed = False
 
-    await message.reply_photo(
-        photo=FORCE_PIC,
-        caption=FORCE_MSG.format(
-            first=message.from_user.first_name,
-            last=message.from_user.last_name,
-            username=None if not message.from_user.username else '@' + message.from_user.username,
-            mention=message.from_user.mention,
-            id=message.from_user.id
-        ),
-        reply_markup=InlineKeyboardMarkup(buttons)
-    )
+    if not subscribed:
+        try:
+            buttons.append([
+                InlineKeyboardButton(
+                    text="ʀᴇʟᴏᴀᴅ",
+                    url=f"https://t.me/{client.username}?start={message.command[1]}"
+                )
+            ])
+        except IndexError:
+            pass
+        await message.reply_photo(
+            photo=FORCE_PIC,
+            caption=FORCE_MSG.format(
+                first=message.from_user.first_name,
+                last=message.from_user.last_name,
+                username=None if not message.from_user.username else '@' + message.from_user.username,
+                mention=message.from_user.mention,
+                id=message.from_user.id
+            ),
+            reply_markup=InlineKeyboardMarkup(buttons)
+        )
+        LOGGER.info(f"User {message.from_user.id} not subscribed to required channels")
+        return False
+    return True
 
 WAIT_MSG = "<b>Working....</b>"
 REPLY_ERROR = "<code>Use this command as a reply to any telegram message without any spaces.</code>"
