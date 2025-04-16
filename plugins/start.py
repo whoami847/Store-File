@@ -2,7 +2,7 @@ import asyncio
 import random
 from pyrogram import Client, filters
 from pyrogram.enums import ParseMode
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, ReactionTypeEmoji
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from bot import Bot
 from config import *
 from helper_func import *
@@ -100,7 +100,7 @@ async def start_command(client: Client, message: Message):
                     [[InlineKeyboardButton("ɢᴇᴛ ꜰɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)]]
                 ) if reload_url else None
                 await notification_msg.edit(
-                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪs sᴜᴄᴄᴇssꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
+                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪs sᴜᴄᴄᴇssꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴵɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
                     reply_markup=keyboard
                 )
             except Exception as e:
@@ -109,7 +109,7 @@ async def start_command(client: Client, message: Message):
         # Add random emoji reaction to the /start command message
         random_emoji = random.choice(EMOJIS)
         try:
-            await message.set_reaction(reaction=ReactionTypeEmoji(emoji=random_emoji))
+            await message.set_reaction(reaction=random_emoji)
         except Exception as e:
             print(f"Failed to set reaction: {e}")
         
@@ -159,11 +159,11 @@ async def not_joined(client: Client, message: Message):
         ])
     elif FORCE_SUB_CHANNEL2:
         buttons.append([
-            InlineKeyboardButton(text="• ᴜɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink2)
+            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ•", url=client.invitelink2)
         ])
     if FORCE_SUB_CHANNEL3 and FORCE_SUB_CHANNEL4:
         buttons.append([
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink3),
+            InlineKeyboardButton(text="• ᴜɴ ᴄʜᴀɴɴᴇʟ", url=client.invitelink3),
             InlineKeyboardButton(text="ᴜɴ ᴄʜᴀɴɴᴇʟ •", url=client.invitelink4),
         ])
     elif FORCE_SUB_CHANNEL3:
@@ -196,7 +196,7 @@ async def not_joined(client: Client, message: Message):
     )
 
 WAIT_MSG = "<b>ᴡᴏʀᴋɪɴɢ....</b>"
-REPLY_ERROR = "<code>ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴮɴᴅ ᴀs ᴀ ʀᴇᴘʟʏ ᴛᴏ ᴀɴʏ ᴛᴇʟᴇɢʀᴀᴍ ᴍᴇssᴀɢᴇ ᴡɪᴛʜᴏᴜᴛ ᴀɴʏ sᴘᴀᴄᴇs.</code>"
+REPLY_ERROR = "<code>ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ ᴀs ᴀ ʀᴇᴘʟʏ ᴛᴏ ᴀɴʏ ᴛᴇʟᴇɢʀᴀᴍ ᴍᴇssᴀɢᴇ ᴡɪᴛʜᴏᴜᴛ ᴀɴʏ sᴘᴀᴄᴇs.</code>"
 
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
 async def get_users(client: Bot, message: Message):
@@ -281,6 +281,6 @@ async def delete_broadcast(client: Bot, message: Message):
         status = f"""<b><u>ʙʀᴏᴀᴅᴄᴀsᴛ ᴡɪᴛʜ ᴀᴜᴛᴏ-ᴅᴇʟᴇᴛᴇ...</u>ᴛᴏᴛᴀʟ ᴜsᴇʀs: <code>{total}</code>sᴜᴄᴄᴇssꜰᴜʟ: <code>{successful}</code>ʙʟᴏᴄᴋᴇᴅ ᴜsᴇʀs: <code>{blocked}</code>ᴅᴇʟᴇᴛᴇᴅ ᴀᴄᴄᴏᴜɴᴛs: <code>{deleted}</code>ᴜɴsᴜᴄᴄᴇssꜰᴜʟ: <code>{unsuccessful}</code></b>"""
         return await pls_wait.edit(status)
     else:
-        msg = await message.reply("ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ ɪᴛ ᴡɪᴛʜ ᴀᴜᴛᴏ-ᴅᴇʟᴇᴛᴇ.")
+        msg = await message.reply("ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ ɪᴛ ᴡɪᴛʜ ᴀᴉᴛᴏ-ᴅᴇʟᴇᴛᴇ.")
         await asyncio.sleep(8)
         await msg.delete()
