@@ -22,7 +22,8 @@ from logging import getLogger
 
 # File auto-delete time in seconds (Set your desired time in seconds here)
 FILE_AUTO_DELETE = TIME  # Example: 3600 seconds (1 hour)
-TUT_VID = f"{TUT_VID}"
+# TUT_VID set to empty string as a fallback; define it in config.py if needed
+TUT_VID = ""  # Replace with actual tutorial video URL in config.py if available
 
 # Logger setup
 LOGGER = getLogger(__name__)
@@ -48,8 +49,8 @@ async def start_command(client: Client, message: Message):
     if not await present_user(id):
         try:
             await add_user(id)
-        except:
-            pass
+        except Exception as e:
+            LOGGER.error(f"Failed to add user {id}: {e}")
 
     # Add random animated emoji reaction
     try:
@@ -107,10 +108,10 @@ async def start_command(client: Client, message: Message):
                 link = await get_shortlink(SHORTLINK_URL, SHORTLINK_API, f'https://telegram.dog/{client.username}?start=verify_{token}')
                 btn = [
                     [InlineKeyboardButton("• ᴏᴘᴇɴ ʟɪɴᴋ •", url=link)], 
-                    [InlineKeyboardButton('• ᴛᴜᴛᴏʀɪᴀʟ •', url=TUT_VID)]
+                    [InlineKeyboardButton('• ᴛᴜᴛᴏʀɪᴀʟ •', url=TUT_VID)] if TUT_VID else []
                 ]
                 return await message.reply(
-                    f"𝗬𝗼𝘂𝗿 𝘁𝗼𝗸𝗲𝗻 𝗵𝗮𝘀 𝗲𝘅𝗽𝗶𝗿𝗲𝗱. 𝗣𝗹𝗲𝗮𝘀𝗲 𝗿𝗲𝗳𝗿𝗲𝘀𝗵 𝘆𝗼𝘂𝗿 𝘁𝗼𝗸𝗲𝗻 𝘁𝗼 𝗰𝗼𝗻𝘁𝗶𝗻𝘂𝗲..\n\n<b>Tᴏᴋᴇɴ Tɪᴍᴇᴏᴜᴛ:</b> {get_exp_time(VERIFY_EXPIRE)}\n\n<b>ᴡʜᴀᴛ ɪs ᴛʜᴇ ᴛᴏᴋᴇɴ??</b>\n\nᴛʜɪs ɪs ᴀɴ ᴀᴅs ᴛᴏᴋᴇɴ. ᴘᴀssɪɴɢ ᴏɴᴇ ᴀᴅ ᴀʟʟᴏᴡs ʏᴏᴜ ᴛᴏ ᴜsᴇ ᴛʜᴇ ʙᴏᴛ ғᴏʀ {get_exp_time(VERIFY_EXPIRE)}</b>",
+                    f"𝗬𝗼𝘂𝗿 𝘁𝗼𝗸𝗲𝗻 𝗵𝗮𝘀 𝗲𝘅𝗽𝗶𝗿𝗲𝗱. 𝗣𝗹𝗲𝗮𝘀𝗲 𝗿𝗲𝗳𝗿𝗲𝘀𝗵 𝘆𝗼𝘂𝗿 𝘁𝗼𝗸𝗲𝗻 𝘁𝗼 𝗰𝗼𝗻𝘁𝗶𝗻𝘂�_e..\n\n<b>Tᴏᴋᴇɴ Tɪᴍᴇᴏᴜᴛ:</b> {get_exp_time(VERIFY_EXPIRE)}\n\n<b>ᴡʜᴀᴛ ɪs ᴛʜᴇ ᴛᴏᴋᴇɴ??</b>\n\nᴛʜɪs ɪs ᴀɴ ᴀᴅs ᴛᴏᴋᴇɴ. ᴘᴀssɪɴɢ ᴏɴᴇ ᴀᴅ ᴀʟʟᴏᴡs ʏᴏᴜ ᴛᴏ ᴜsᴇ ᴛʜᴇ ʙᴏᴛ ғᴏʀ {get_exp_time(VERIFY_EXPIRE)}</b>",
                     reply_markup=InlineKeyboardMarkup(btn),
                     protect_content=False,
                     quote=True
@@ -314,9 +315,9 @@ async def send_text(client: Bot, message: Message):
             except InputUserDeactivated:
                 await del_user(chat_id)
                 deleted += 1
-            except:
+            except Exception as e:
+                LOGGER.error(f"Failed to broadcast to {chat_id}: {e}")
                 unsuccessful += 1
-                pass
             total += 1
 
         status = f"""<b><u>ʙʀᴏᴀᴅᴄᴀꜱᴛ...</u>
@@ -370,9 +371,9 @@ async def delete_broadcast(client: Bot, message: Message):
             except InputUserDeactivated:
                 await del_user(chat_id)
                 deleted += 1
-            except:
+            except Exception as e:
+                LOGGER.error(f"Failed to broadcast/delete to {chat_id}: {e}")
                 unsuccessful += 1
-                pass
             total += 1
 
         status = f"""<b><u>Broadcast with Auto-Delete...</u>
