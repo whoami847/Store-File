@@ -6,8 +6,25 @@ from bot import Bot
 from config import *
 from helper_func import *
 from database.database import *
+import random  # র‍্যান্ডম ইমোজি ও স্টিকারের জন্য
 
 # (©)WhoAmI, MehediYT
+
+# অ্যানিমেটেড ইমোজি লিস্ট
+ANIMATED_EMOJIS = [
+    "😂", "😹", "😻", "😍", "😘", "😽", "😺", "😸", "🙀", "😿", "😼", "😎", "😈", "😱", "😢", "😳", "🤩", "🤗", "🤓", "🥳",
+    "❤️", "💙", "💚", "💛", "💜", "🖤", "💖", "💗", "💘", "💝", "💞",
+    "🎉", "🎈", "🎂", "🎁", "🎆", "🎇", "🎊", "🎃",
+    "🔥", "💥", "⚡️", "🌟", "⭐", "💦", "💨", "🎲", "🏀", "⚽", "🚀", "✈️",
+    "🐱", "🐶", "🦁", "🐳", "🐘", "🦒", "🐍",
+    "👻", "💀", "💩", "👽", "🤖", "🦠", "🧨"
+]
+
+# স্টিকার আইডি লিস্ট (ডিফল্ট অ্যানিমেটেড স্টিকার)
+STICKERS = [
+    "CAACAgIAAxkBAAIBq2Zx2y9AAX1sZ3Jq5zqAAX9AAWqJAAKFAQACaAGlB96pL3T_9gABLwQ",  # Animated cat sticker
+    "CAACAgIAAxkBAAIBrWZx2zAAAXq5zAAXJ5zqAAX9AAWqJAAKFAQACaAGlB96pL3T_9gABLwQ",  # Another animated sticker
+]
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed1 & subscribed2 & subscribed3 & subscribed4)
 async def start_command(client: Client, message: Message):
@@ -17,6 +34,24 @@ async def start_command(client: Client, message: Message):
             await add_user(id)
         except:
             pass
+
+    # র‍্যান্ডম অ্যানিমেটেড ইমোজি রিঅ্যাকশন
+    try:
+        random_emoji = random.choice(ANIMATED_EMOJIS)
+        await client.set_reaction(
+            chat_id=message.chat.id,
+            message_id=message.id,
+            reaction=random_emoji
+        )
+    except Exception as e:
+        LOGGER(__name__).error(f"Failed to set reaction: {e}")
+
+    # র‍্যান্ডম স্টিকার পাঠানো
+    try:
+        random_sticker = random.choice(STICKERS)
+        await message.reply_sticker(sticker=random_sticker)
+    except Exception as e:
+        LOGGER(__name__).error(f"Failed to send sticker: {e}")
 
     text = message.text
     if len(text) > 7:
