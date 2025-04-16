@@ -19,4 +19,4 @@ bs4
 shortzy
 aiofiles
 asyncio
-Pyrogram==2.3.45
+Pyrogram==2.0.106
