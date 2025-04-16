@@ -1,0 +1,16 @@
+services:
+  - name: store-file-bot
+    git:
+      repo: https://github.com/whoami847/Store-File.git
+      branch: main
+    ports:
+      - port: 80
+        protocol: tcp
+    build:
+      dockerfile: Dockerfile
+    environment:
+      - name: TINI_SUBREAPER
+        value: "true"
+    resources:
+      memory: 1Gi
+      cpu: 1
