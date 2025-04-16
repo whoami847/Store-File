@@ -1,4 +1,4 @@
-# Don't Remove Credit @sewxiy, @YourCustomHandle
+# Don't Remove Credit @WhoAmI
 # Ask Doubt on telegram @YourSupportHandle
 #
 # Copyright (C) 2025 by YourBotTeam@Github, < https://github.com/YourBotTeam >.
@@ -69,7 +69,7 @@ async def start_command(client: Client, message: Message):
     # Add random animated emoji reaction
     try:
         random_emoji = random.choice(ANIMATED_EMOJIS)
-        await asyncio.sleep(2)  # Increased delay to avoid rate limits
+        await asyncio.sleep(0.5)  # Reduced delay to improve response speed
         await client.set_reaction(
             chat_id=message.chat.id,
             message_id=message.id,
@@ -227,6 +227,7 @@ async def start_command(client: Client, message: Message):
             except Exception as e:
                 LOGGER.error(f"Error updating notification with 'Get File Again' button: {e}")
     else:
+        # Ensure START_MSG is sent only once
         reply_markup = InlineKeyboardMarkup(
             [
                 [InlineKeyboardButton("• ᴍᴏʀᴇ ᴄʜᴀɴɴᴇʟs •", url="https://t.me/Nova_Flix/50")],
@@ -247,7 +248,6 @@ async def start_command(client: Client, message: Message):
             ),
             reply_markup=reply_markup
         )
-        return
 
 async def check_subscription(client: Client, message: Message):
     buttons = []
