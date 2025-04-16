@@ -8,14 +8,12 @@ from config import *
 from helper_func import *
 from database.database import *
 
-# Define the list of emojis for reactions
-EMOJIS = [
-    "😂", "😹", "😻", "😍", "😘", "😽", "😺", "😸", "🙀", "😿", "😼", "😎", "😈", "😱", "😢", "😳", "🤩", "🤗", "🤓", "🥳",
-    "❤️", "💙", "💚", "💛", "💜", "🖤", "💖", "💗", "💘", "💝", "💞",
-    "🎉", "🎈", "🎂", "🎁", "🎆", "🎇", "🎊", "🎃",
-    "🔥", "💥", "⚡️", "🌟", "⭐", "💦", "💨", "🎲", "🏀", "⚽", "🚀", "✈️",
-    "🐱", "🐶", "🦁", "🐳", "🐘", "🦒", "🐍",
-    "👻", "💀", "💩", "👽", "🤖", "🦠", "🧨"
+# Define the list of animated GIF file IDs
+ANIMATED_GIFS = [
+    # Replace these with actual Telegram GIF file IDs
+    "DgAAAAABdHRwczovL3QubWUvZmlsZS9zdG9yZS9zLzcvYS9kLzdhZDRlYzEyZDI1NzBjMTFiMC9maWxlXzEubXA0",  # Example: Fire emoji GIF
+    "DgAAAAABdHRwczovL3QubWUvZmlsZS9zdG9yZS9zLzcvYS9kLzdhZDRlYzEyZDI1NzBjMTFiMC9maWxlXzIubXA0",  # Example: Star emoji GIF
+    "DgAAAAABdHRwczovL3QubWUvZmlsZS9zdG9yZS9zLzcvYS9kLzdhZDRlYzEyZDI1NzBjMTFiMC9maWxlXzMubXA0"   # Example: Party popper GIF
 ]
 
 # Sticker file ID
@@ -100,29 +98,27 @@ async def start_command(client: Client, message: Message):
                     [[InlineKeyboardButton("ɢᴇᴛ ꜰɪʟᴇ ᴀɢᴀɪɴ!", url=reload_url)]]
                 ) if reload_url else None
                 await notification_msg.edit(
-                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪs sᴜᴄᴄᴇssꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴵɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
+                    "<b>ʏᴏᴜʀ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ ɪs sᴜᴄᴄᴇssꜰᴜʟʟʏ ᴅᴇʟᴇᴛᴇᴅ !!\n\nᴄʟɪᴄᴋ ʙᴇʟᴏᴡ ʙᴜᴛᴛᴏɴ ᴛᴏ ɢᴇᴛ ʏᴏᴜʀ ᴅᴇʟᴇᴛᴇᴅ ᴠɪᴅᴇᴏ / ꜰɪʟᴇ 👇</b>",
                     reply_markup=keyboard
                 )
             except Exception as e:
                 print(f"Error updating notification with 'Get File Again' button: {e}")
     else:
-        # Add random emoji reaction to the /start command message
-        random_emoji = random.choice(EMOJIS)
-        try:
-            await message.set_reaction(reaction=random_emoji)
-        except Exception as e:
-            print(f"Failed to set reaction: {e}")
+        # Send random animated GIF
+        random_gif = random.choice(ANIMATED_GIFS)
+        gif_msg = await message.reply_animation(animation=random_gif)
         
         # Wait 1 second and send the sticker
         await asyncio.sleep(1)
         sticker_msg = await message.reply_sticker(sticker=STICKER_ID)
         
-        # Wait 1.35 seconds and delete the sticker
+        # Wait 1.35 seconds and delete both GIF and sticker
         await asyncio.sleep(1.35)
         try:
+            await gif_msg.delete()
             await sticker_msg.delete()
         except Exception as e:
-            print(f"Failed to delete sticker: {e}")
+            print(f"Failed to delete GIF or sticker: {e}")
         
         # Send the standard start message
         reply_markup = InlineKeyboardMarkup(
@@ -281,6 +277,6 @@ async def delete_broadcast(client: Bot, message: Message):
         status = f"""<b><u>ʙʀᴏᴀᴅᴄᴀsᴛ ᴡɪᴛʜ ᴀᴜᴛᴏ-ᴅᴇʟᴇᴛᴇ...</u>ᴛᴏᴛᴀʟ ᴜsᴇʀs: <code>{total}</code>sᴜᴄᴄᴇssꜰᴜʟ: <code>{successful}</code>ʙʟᴏᴄᴋᴇᴅ ᴜsᴇʀs: <code>{blocked}</code>ᴅᴇʟᴇᴛᴇᴅ ᴀᴄᴄᴏᴜɴᴛs: <code>{deleted}</code>ᴜɴsᴜᴄᴄᴇssꜰᴜʟ: <code>{unsuccessful}</code></b>"""
         return await pls_wait.edit(status)
     else:
-        msg = await message.reply("ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ ɪᴛ ᴡɪᴛʜ ᴀᴉᴛᴏ-ᴅᴇʟᴇᴛᴇ.")
+        msg = await message.reply("ᴘʟᴇᴀsᴇ ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴍᴇssᴀɢᴇ ᴛᴏ ʙʀᴏᴀᴅᴄᴀsᴛ ɪᴛ ᴡɪᴛʜ ᴀᴜᴛᴏ-ᴅᴇʟᴇᴛᴇ.")
         await asyncio.sleep(8)
         await msg.delete()
